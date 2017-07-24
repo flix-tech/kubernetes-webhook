@@ -1,0 +1,14 @@
+package: github.com/nielsole/kubernetes-webhook-server
+import:
+- package: github.com/dgrijalva/jwt-go
+  version: ~3.0.0
+- package: gopkg.in/yaml.v2
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+- package: k8s.io/kubernetes
+  version: ~1.7.0-alpha.1
+  subpackages:
+  - pkg/apis/authentication/v1beta1
+- package: github.com/gobwas/glob
+  version: ^0.2.2

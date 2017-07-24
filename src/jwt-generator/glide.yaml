@@ -1,0 +1,4 @@
+package: .
+import:
+- package: github.com/dgrijalva/jwt-go
+  version: ^3.0.0
