@@ -6,4 +6,4 @@
 
 # Usage
 
-    cat jwtRS256.key.pub | ./jwt-generator --user gitlab --group gitlab-group1 --group gitlab-group2
+    cat jwtRS256.key | ./jwt-generator --user gitlab --group gitlab-group1 --group gitlab-group2
