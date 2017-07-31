@@ -1,0 +1,4 @@
+*.key
+*.key.pub
+!*.test.key
+!*.test.key.pub

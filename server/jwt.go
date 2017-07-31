@@ -3,6 +3,7 @@ package main
 import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"errors"
+	"github.com/prometheus/common/log"
 )
 
 func verifyToken(tokenString string,credentials *[]SettingsCredential) (err1 error, user string, groups []string) {
@@ -14,16 +15,12 @@ func verifyToken(tokenString string,credentials *[]SettingsCredential) (err1 err
 			return jwt.ParseRSAPublicKeyFromPEM([]byte(credential.Key))
 		})
 		if err != nil {
-			print(err.Error())
-			println("Tried credential: ", credential.Key)
+			log.Info(err)
+			log.Debug("Tried credential: ", credential.Key)
 			continue
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 			// Expiration checking
-			if err := token.Claims.Valid(); err != nil{
-				println("Claims expired? - ", err)
-				return err,"",nil
-			}
 			user := claims["user"].(string)
 			groups := make([]string,len(claims["groups"].([]interface{})))
 			for i, group := range claims["groups"].([]interface{}) {
@@ -32,8 +29,10 @@ func verifyToken(tokenString string,credentials *[]SettingsCredential) (err1 err
 			//groups := claims["groups"].([]string)
 			if credential.checkUser(user){
 				// return the user and the allowed groups
-				println("Success for user", user)
+				log.Info("Success for user", user)
 				return nil, user, credential.checkGroups(groups)
+			}else {
+				err = errors.New("User not allowed by glob")
 			}
 		}
 	}
