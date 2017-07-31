@@ -11,15 +11,7 @@ func main() {
 	generateEmptyConfig := flag.Bool("init", false, "Writes an empty config file to the specified path")
 	flag.Parse()
 	if *generateEmptyConfig {
-		out, err := yaml.Marshal(
-			Settings{
-				Credentials:
-				&[]SettingsCredential{{}},
-			})
-		if err != nil {
-			panic(err)
-		}
-		ioutil.WriteFile(*filename,out,0666)
+		filename = createEmptyConfig(filename)
 		return
 	}
 	err, config := readConfig(*filename)
@@ -27,4 +19,17 @@ func main() {
 		panic(err)
 	}
 	runServer(config)
+}
+
+func createEmptyConfig(filename *string) *string {
+	out, err := yaml.Marshal(
+		Settings{
+			Credentials:
+			&[]SettingsCredential{{}},
+		})
+	if err != nil {
+		panic(err)
+	}
+	ioutil.WriteFile(*filename, out, 0666)
+	return filename
 }
