@@ -1,5 +1,3 @@
 vendor/
 pkg/
 bin/
-*.key
-*.key.pub
