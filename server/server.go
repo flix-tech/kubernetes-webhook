@@ -28,17 +28,8 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 		authenticationResponse(w, &authentication.TokenReviewStatus{Authenticated: false})
 		return
 	}
-	/*// Check User
-	if err != nil {
-		//Reject case
-		log.Println("[Error]", err.Error())
-		w.WriteHeader(http.StatusUnauthorized)
-		authenticationResponse(w,&authentication.TokenReviewStatus{Authenticated:false})
-		return
-	}*/
 
-	//Accept case
-	log.Println(tr.Spec.Token)
+	// Main verificatoin step
 	err, user, groups := verifyToken(tr.Spec.Token, config.Credentials)
 	if err != nil {
 		log.Println("[Error]", err.Error())
