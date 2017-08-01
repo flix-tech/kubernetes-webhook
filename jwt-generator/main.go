@@ -65,9 +65,6 @@ func main() {
 		log.Fatal("Please define a user name")
 	}
 
-	if len(groups) == 0{
-		log.Fatal("At least one group must be passed")
-	}
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privateKeyBytes)
 	if err != nil {
 		log.Fatal(err)
