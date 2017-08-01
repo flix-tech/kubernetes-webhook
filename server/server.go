@@ -37,6 +37,7 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 		// Not responding with error because that could leak information.
 		authenticationResponse(w, &authentication.TokenReviewStatus{Authenticated: false,
 			Error:                                                                 "Access not granted"})
+		return
 	}
 	log.Printf("[Success] login as %s", user)
 	w.WriteHeader(http.StatusOK)
