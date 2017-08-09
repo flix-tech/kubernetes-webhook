@@ -3,39 +3,12 @@ package main
 import (
 	yaml "gopkg.in/yaml.v2"
 	"io/ioutil"
-	"github.com/gobwas/glob"
 )
 
 type SettingsCredential struct{
-	Key string
-	UserGlob []string
-	GroupGlob []string
-}
-
-func (c *SettingsCredential) checkUser(user string) bool{
-	var g glob.Glob
-	for _, userGlob := range c.UserGlob{
-		g = glob.MustCompile(userGlob)
-		if g.Match(user) {
-			return true
-		}
-	}
-	return false
-}
-
-func (c *SettingsCredential) checkGroups(groups []string) []string{
-	var g glob.Glob
-	allowedGroups := []string{}
-	for _,group := range groups {
-		for _, groupGlob := range c.GroupGlob {
-			g = glob.MustCompile(groupGlob)
-			if g.Match(group){
-				allowedGroups = append(allowedGroups,group)
-				break
-			}
-		}
-	}
-	return allowedGroups
+	Key        string
+	UserGlobs  []string
+	GroupGlobs []string
 }
 
 type Settings struct{
