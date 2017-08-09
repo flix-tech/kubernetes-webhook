@@ -2,3 +2,4 @@
 *.key.pub
 !*.test.key
 !*.test.key.pub
+config.yml

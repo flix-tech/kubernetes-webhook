@@ -8,23 +8,31 @@ import (
 
 type SettingsCredential struct{
 	Key string
-	UserGlob string
-	GroupGlob string
+	UserGlob []string
+	GroupGlob []string
 }
 
 func (c *SettingsCredential) checkUser(user string) bool{
 	var g glob.Glob
-	g = glob.MustCompile(c.UserGlob)
-	return g.Match(user)
+	for _, userGlob := range c.UserGlob{
+		g = glob.MustCompile(userGlob)
+		if g.Match(user) {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *SettingsCredential) checkGroups(groups []string) []string{
 	var g glob.Glob
-	g = glob.MustCompile(c.GroupGlob)
 	allowedGroups := []string{}
 	for _,group := range groups {
-		if g.Match(group){
-			allowedGroups = append(allowedGroups,group)
+		for _, groupGlob := range c.GroupGlob {
+			g = glob.MustCompile(groupGlob)
+			if g.Match(group){
+				allowedGroups = append(allowedGroups,group)
+				break
+			}
 		}
 	}
 	return allowedGroups
@@ -32,6 +40,7 @@ func (c *SettingsCredential) checkGroups(groups []string) []string{
 
 type Settings struct{
 	Credentials *[]SettingsCredential
+	ListenAddress string
 }
 
 func readConfig(path string) (error, *Settings){

@@ -61,7 +61,7 @@ func (tc *JWTTestCase) createAndCheckToken() (error, string, []string) {
 		log.Fatal("Generating token failed", err)
 	}
 
-	err1, user1, groups1 := verifyToken(token,&[]SettingsCredential{{Key: tc.pubKey,UserGlob:"temper",GroupGlob:"temper*"}})
+	err1, user1, groups1 := verifyToken(token,&[]SettingsCredential{{Key: tc.pubKey,UserGlob:[]string{"temper","temporal"},GroupGlob:[]string{"temper*"}}})
 	if err1 != nil {
 		return err1, "", nil
 	}

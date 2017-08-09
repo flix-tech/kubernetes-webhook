@@ -25,7 +25,7 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 	if err != nil {
 		log.Println("[Error]", err.Error())
 		w.WriteHeader(http.StatusBadRequest)
-		authenticationResponse(w, &authentication.TokenReviewStatus{Authenticated: false})
+		authenticationResponse(w, &authentication.TokenReviewStatus{Authenticated: false, Error: "Bad Request"})
 		return
 	}
 
@@ -60,6 +60,6 @@ func runServer(config *Settings){
 	http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request){
 		authenticate(w,r,config)
 	})
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Fatal(http.ListenAndServe(config.ListenAddress, nil))
 
 }
