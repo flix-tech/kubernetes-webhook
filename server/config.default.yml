@@ -1,5 +1,5 @@
 credentials:
 - key: ""
-  userglob: []
-  groupglob: []
+  userglobs: []
+  groupglobs: []
 listenaddress: ""
