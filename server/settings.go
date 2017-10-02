@@ -14,6 +14,9 @@ type SettingsCredential struct{
 type Settings struct{
 	Credentials *[]SettingsCredential
 	ListenAddress string
+	SSL        bool
+	SSLKeyPath string
+	SSLCrtPath string
 }
 
 func readConfig(path string) (error, *Settings){

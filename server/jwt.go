@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/prometheus/common/log"
 	"github.com/gobwas/glob"
+	"io/ioutil"
 )
 
 func userMatchesGlobs(username string,globs []string) bool{
@@ -37,12 +38,17 @@ func verifyToken(tokenString string,credentials *[]SettingsCredential) (err1 err
 	var err error = nil
 	// Iterate over all configured credentials and use the first one that works.
 	for _, credential := range(*credentials) {
+		publicKey, err := ioutil.ReadFile(credential.Key)
+		if err != nil {
+			log.Error(err)
+			continue
+		}
 		token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return jwt.ParseRSAPublicKeyFromPEM([]byte(credential.Key))
+			return jwt.ParseRSAPublicKeyFromPEM(publicKey)
 		})
 		if err != nil {
 			log.Info(err)
-			log.Debug("Tried credential: ", credential.Key)
+			log.Debug("Tried credential: ", string(publicKey))
 			continue
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

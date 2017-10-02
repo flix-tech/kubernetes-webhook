@@ -60,6 +60,10 @@ func runServer(config *Settings){
 	http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request){
 		authenticate(w,r,config)
 	})
-	log.Fatal(http.ListenAndServe(config.ListenAddress, nil))
+	if config.SSL {
+		log.Fatal(http.ListenAndServe(config.ListenAddress, nil))
+	}else{
+		log.Fatal(http.ListenAndServeTLS(config.ListenAddress, config.SSLCrtPath,config.SSLKeyPath, nil))
+	}
 
 }
