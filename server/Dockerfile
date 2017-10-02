@@ -5,3 +5,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-s' -o mai
 FROM debian:stretch
 COPY --from=0 /go/src/app/main /main
 ENTRYPOINT /main
+CMD ["-config", "/config.yml"]
