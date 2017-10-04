@@ -40,7 +40,7 @@ func verifyToken(tokenString string,credentials *[]SettingsCredential) (err1 err
 	for _, credential := range(*credentials) {
 		publicKey, err := ioutil.ReadFile(credential.Key)
 		if err != nil {
-			log.Error(err)
+			log.Error("RSA key file not found: ", credential.Key, err)
 			continue
 		}
 		token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

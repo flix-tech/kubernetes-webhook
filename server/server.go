@@ -6,6 +6,7 @@ import (
 	"net/http"
 	authentication "k8s.io/kubernetes/pkg/apis/authentication/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"os"
 )
 
 func authenticationResponse(w http.ResponseWriter, trs *authentication.TokenReviewStatus) {
@@ -56,14 +57,24 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 	})
 }
 
+func assertFileExists(path string) {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		log.Println("File '%v' does not exist.", path)
+		os.Exit(1)
+	}
+}
+
 func runServer(config *Settings){
 	http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request){
 		authenticate(w,r,config)
 	})
 	if config.SSL {
-		log.Fatal(http.ListenAndServe(config.ListenAddress, nil))
-	}else{
+		assertFileExists(config.SSLKeyPath)
+		assertFileExists(config.SSLCrtPath)
 		log.Fatal(http.ListenAndServeTLS(config.ListenAddress, config.SSLCrtPath,config.SSLKeyPath, nil))
+	}else{
+		log.Fatal(http.ListenAndServe(config.ListenAddress, nil))
 	}
 
 }

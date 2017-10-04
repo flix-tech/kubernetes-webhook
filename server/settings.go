@@ -6,17 +6,17 @@ import (
 )
 
 type SettingsCredential struct{
-	Key        string
-	UserGlobs  []string
-	GroupGlobs []string
+	Key        string `yaml:"key"`
+	UserGlobs  []string `yaml:"userglobs"`
+	GroupGlobs []string `yaml:"groupglobs"`
 }
 
 type Settings struct{
-	Credentials *[]SettingsCredential
-	ListenAddress string
-	SSL        bool
-	SSLKeyPath string
-	SSLCrtPath string
+	Credentials *[]SettingsCredential `yaml:"credentials"`
+	ListenAddress string `yaml:"listenaddress"`
+	SSL        bool `json:"ssl"`
+	SSLKeyPath string `json:"sslkeypath"`
+	SSLCrtPath string `json:"sslcrtpath"`
 }
 
 func readConfig(path string) (error, *Settings){
