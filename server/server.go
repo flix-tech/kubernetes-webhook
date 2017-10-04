@@ -12,10 +12,10 @@ import (
 func authenticationResponse(w http.ResponseWriter, trs *authentication.TokenReviewStatus) {
 	tr := authentication.TokenReview{
 		TypeMeta: metav1.TypeMeta{
-		APIVersion: "authentication.k8s.io/v1beta1",
-		Kind: "TokenReview"},
+			APIVersion: "authentication.k8s.io/v1beta1",
+			Kind:       "TokenReview"},
 		Status: *trs,
-		}
+	}
 	json.NewEncoder(w).Encode(tr)
 }
 
@@ -37,7 +37,7 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 		w.WriteHeader(http.StatusUnauthorized)
 		// Not responding with error because that could leak information.
 		authenticationResponse(w, &authentication.TokenReviewStatus{Authenticated: false,
-			Error:                                                                 "Access not granted"})
+			Error: "Access not granted"})
 		return
 	}
 	log.Printf("[Success] login as %s", user)
@@ -65,19 +65,19 @@ func assertFileExists(path string) {
 	}
 }
 
-func runServer(config *Settings) *http.Server{
+func runServer(config *Settings) *http.Server {
 	srv := &http.Server{Addr: config.ListenAddress}
-	http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request){
-		authenticate(w,r,config)
+	http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
+		authenticate(w, r, config)
 	})
 	if config.SSL {
 		assertFileExists(config.SSLKeyPath)
 		assertFileExists(config.SSLCrtPath)
 		log.Printf("Starting HTTPS server on address: %v", srv.Addr)
-		go func() {log.Fatal(srv.ListenAndServeTLS(config.SSLCrtPath,srv.Addr))}()
-	}else{
+		go func() { log.Fatal(srv.ListenAndServeTLS(config.SSLCrtPath, config.SSLKeyPath)) }()
+	} else {
 		log.Printf("Starting HTTP server on address: %v", srv.Addr)
-		go func() {log.Fatal(srv.ListenAndServe())}()
+		go func() { log.Fatal(srv.ListenAndServe()) }()
 	}
 	return srv
 }
