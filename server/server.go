@@ -65,16 +65,19 @@ func assertFileExists(path string) {
 	}
 }
 
-func runServer(config *Settings){
+func runServer(config *Settings) *http.Server{
+	srv := &http.Server{Addr: config.ListenAddress}
 	http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request){
 		authenticate(w,r,config)
 	})
 	if config.SSL {
 		assertFileExists(config.SSLKeyPath)
 		assertFileExists(config.SSLCrtPath)
-		log.Fatal(http.ListenAndServeTLS(config.ListenAddress, config.SSLCrtPath,config.SSLKeyPath, nil))
+		log.Printf("Starting HTTPS server on address: %v", srv.Addr)
+		go func() {log.Fatal(srv.ListenAndServeTLS(config.SSLCrtPath,srv.Addr))}()
 	}else{
-		log.Fatal(http.ListenAndServe(config.ListenAddress, nil))
+		log.Printf("Starting HTTP server on address: %v", srv.Addr)
+		go func() {log.Fatal(srv.ListenAndServe())}()
 	}
-
+	return srv
 }

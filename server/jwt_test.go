@@ -2,7 +2,7 @@ package main
 
 import (
 	"testing"
-	generator "github.com/flix-tech/kubernetes-webhook/jwt-generator"
+	generator "github.com/flix-tech/kubernetes-webhook/jwt-generator/generator"
 	"time"
 	"io/ioutil"
 	"log"
@@ -24,7 +24,7 @@ type JWTTestCase struct {
 
 func newJWTTestCase(iat time.Time, validity time.Duration,user string, groups []string,userGlob string, groupGlob string, t *testing.T) JWTTestCase{
 	privKey := loadPrivateKey()
-	pubKey := loadPublicKey()
+	pubKey := "./test_resources/RS256.test.key.pub"
 	return JWTTestCase{
 		iat:iat,
 		validity:validity,
@@ -39,7 +39,7 @@ func newJWTTestCase(iat time.Time, validity time.Duration,user string, groups []
 }
 
 func loadPrivateKey() *rsa.PrivateKey {
-	dat, err := ioutil.ReadFile("./RS256.test.key")
+	dat, err := ioutil.ReadFile("./test_resources/RS256.test.key")
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(dat)
 	if err != nil {
 		log.Fatal("Couldn't load private key: ", err)
@@ -48,7 +48,7 @@ func loadPrivateKey() *rsa.PrivateKey {
 }
 
 func loadPublicKey() string {
-	dat, err := ioutil.ReadFile("./RS256.test.key.pub")
+	dat, err := ioutil.ReadFile("./test_resources/RS256.test.key.pub")
 	if err != nil {
 		log.Fatal("Couldn't load public key: ", err)
 	}
@@ -137,7 +137,7 @@ func TestTimeTravel(t *testing.T) {
 func TestRejectWrongKey(t *testing.T) {
 	user, groups := "temper3", []string{"temper1", "temper2"}
 	tc := newJWTTestCase(time.Now().Add(-1* time.Second), 60 * time.Second, user, groups,"temper*", "temper*", t)
-	dat, err := ioutil.ReadFile("./RS256-other.test.key")
+	dat, err := ioutil.ReadFile("./test_resources/RS256-other.test.key")
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(dat)
 	if err != nil {
 		log.Fatal("Couldn't load private key: ", err)

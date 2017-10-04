@@ -72,6 +72,6 @@ func verifyToken(tokenString string,credentials *[]SettingsCredential) (err1 err
 	if err != nil {
 		return errors.New("Could not find a matching token"), "", nil
 	}
-	panic("Impossible codepath reached")
+	return errors.New("No token matched"),"",nil
 }
 
