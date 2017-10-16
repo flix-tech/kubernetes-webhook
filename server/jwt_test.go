@@ -1,40 +1,40 @@
 package main
 
 import (
-	"testing"
+	"crypto/rsa"
+	"github.com/dgrijalva/jwt-go"
 	generator "github.com/flix-tech/kubernetes-webhook/jwt-generator/generator"
-	"time"
 	"io/ioutil"
 	"log"
-	"github.com/dgrijalva/jwt-go"
-	"crypto/rsa"
+	"testing"
+	"time"
 )
 
 type JWTTestCase struct {
-	iat time.Time
-	validity time.Duration
-	user string
-	userGlob string
-	groups []string
+	iat       time.Time
+	validity  time.Duration
+	user      string
+	userGlob  string
+	groups    []string
 	groupGlob string
-	t *testing.T
-	pubKey string
-	privKey *rsa.PrivateKey
+	t         *testing.T
+	pubKey    string
+	privKey   *rsa.PrivateKey
 }
 
-func newJWTTestCase(iat time.Time, validity time.Duration,user string, groups []string,userGlob string, groupGlob string, t *testing.T) JWTTestCase{
+func newJWTTestCase(iat time.Time, validity time.Duration, user string, groups []string, userGlob string, groupGlob string, t *testing.T) JWTTestCase {
 	privKey := loadPrivateKey()
 	pubKey := "./test_resources/RS256.test.key.pub"
 	return JWTTestCase{
-		iat:iat,
-		validity:validity,
-		user: user,
-		userGlob: userGlob,
-		groups: groups,
+		iat:       iat,
+		validity:  validity,
+		user:      user,
+		userGlob:  userGlob,
+		groups:    groups,
 		groupGlob: groupGlob,
-		t: t,
-		privKey: privKey,
-		pubKey: pubKey,
+		t:         t,
+		privKey:   privKey,
+		pubKey:    pubKey,
 	}
 }
 
@@ -56,12 +56,12 @@ func loadPublicKey() string {
 }
 
 func (tc *JWTTestCase) createAndCheckToken() (error, string, []string) {
-	token, err := generator.GenerateToken(tc.iat,tc.validity,tc.user, tc.groups,tc.privKey)
+	token, err := generator.GenerateToken(tc.iat, tc.validity, tc.user, tc.groups, tc.privKey)
 	if err != nil {
 		log.Fatal("Generating token failed", err)
 	}
 
-	err1, user1, groups1 := verifyToken(token,&[]SettingsCredential{{Key: tc.pubKey, UserGlobs: []string{"temper", "temporal"}, GroupGlobs: []string{"temper*"}}})
+	err1, user1, groups1 := verifyToken(token, &[]SettingsCredential{{Key: tc.pubKey, UserGlobs: []string{"temper", "temporal"}, GroupGlobs: []string{"temper*"}}})
 	if err1 != nil {
 		return err1, "", nil
 	}
@@ -78,7 +78,7 @@ func (tc *JWTTestCase) compareIdentity(user1 string, groups1 []string) bool {
 		return false
 	}
 	for i, group := range tc.groups {
-		if group != groups1[i]{
+		if group != groups1[i] {
 			tc.t.Log("Groups did not match")
 			return false
 		}
@@ -88,19 +88,19 @@ func (tc *JWTTestCase) compareIdentity(user1 string, groups1 []string) bool {
 
 func TestHappyCase(t *testing.T) {
 	user, groups := "temper", []string{"temper1", "temper2"}
-	tc := newJWTTestCase(time.Now().Add(-1* time.Second), 60 * time.Second, user, groups, user,"temper*", t)
+	tc := newJWTTestCase(time.Now().Add(-1*time.Second), 60*time.Second, user, groups, user, "temper*", t)
 	err, user1, groups1 := tc.createAndCheckToken()
 	if err != nil {
 		t.Error("Token could not be validated", err)
 	}
-	if !tc.compareIdentity(user1,groups1){
+	if !tc.compareIdentity(user1, groups1) {
 		t.Error("Identity does not match")
 	}
 }
 
 func TestExpired(t *testing.T) {
 	user, groups := "temper", []string{"temper1", "temper2"}
-	tc := newJWTTestCase(time.Now().Add(-61* time.Minute), 60 * time.Minute, user, groups, user,"temper*", t)
+	tc := newJWTTestCase(time.Now().Add(-61*time.Minute), 60*time.Minute, user, groups, user, "temper*", t)
 	err, _, _ := tc.createAndCheckToken()
 	if err == nil {
 		t.Error("Token was accepted even though it was expired")
@@ -109,7 +109,7 @@ func TestExpired(t *testing.T) {
 
 func TestUserGlob(t *testing.T) {
 	user, groups := "tempel", []string{"temper1", "temper2"}
-	tc := newJWTTestCase(time.Now().Add(-1* time.Second), 60 * time.Second, user, groups,"temper*", "temper*", t)
+	tc := newJWTTestCase(time.Now().Add(-1*time.Second), 60*time.Second, user, groups, "temper*", "temper*", t)
 	err, _, _ := tc.createAndCheckToken()
 	if err == nil {
 		t.Error("Expected user glob to mismatch")
@@ -118,7 +118,7 @@ func TestUserGlob(t *testing.T) {
 
 func TestGroupGlob(t *testing.T) {
 	user, groups := "temper3", []string{"temper1", "temper2"}
-	tc := newJWTTestCase(time.Now().Add(-1* time.Second), 60 * time.Second, user, groups,"temper*", "tempel*", t)
+	tc := newJWTTestCase(time.Now().Add(-1*time.Second), 60*time.Second, user, groups, "temper*", "tempel*", t)
 	err, _, _ := tc.createAndCheckToken()
 	if err == nil {
 		t.Error("Expected group glob to mismatch")
@@ -127,7 +127,7 @@ func TestGroupGlob(t *testing.T) {
 
 func TestTimeTravel(t *testing.T) {
 	user, groups := "temper3", []string{"temper1", "temper2"}
-	tc := newJWTTestCase(time.Now().Add(10* time.Second), 60 * time.Second, user, groups,"temper*", "temper*", t)
+	tc := newJWTTestCase(time.Now().Add(10*time.Second), 60*time.Second, user, groups, "temper*", "temper*", t)
 	err, _, _ := tc.createAndCheckToken()
 	if err == nil {
 		t.Error("Expected time skew to be detected and forbidden")
@@ -136,7 +136,7 @@ func TestTimeTravel(t *testing.T) {
 
 func TestRejectWrongKey(t *testing.T) {
 	user, groups := "temper3", []string{"temper1", "temper2"}
-	tc := newJWTTestCase(time.Now().Add(-1* time.Second), 60 * time.Second, user, groups,"temper*", "temper*", t)
+	tc := newJWTTestCase(time.Now().Add(-1*time.Second), 60*time.Second, user, groups, "temper*", "temper*", t)
 	dat, err := ioutil.ReadFile("./test_resources/RS256-other.test.key")
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(dat)
 	if err != nil {

@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	authentication "k8s.io/kubernetes/pkg/apis/authentication/v1beta1"
 	"log"
 	"net/http"
-	authentication "k8s.io/kubernetes/pkg/apis/authentication/v1beta1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 )
 

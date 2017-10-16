@@ -1,18 +1,20 @@
 package main
 
 import (
-	"flag"
-	jwt "github.com/dgrijalva/jwt-go"
-	"time"
-	"log"
-	"fmt"
 	"bufio"
-	"os"
-	"io/ioutil"
 	"bytes"
+	"flag"
+	"fmt"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/flix-tech/kubernetes-webhook/jwt-generator/generator"
+	"io/ioutil"
+	"log"
+	"os"
+	"time"
 )
+
 type arrayFlags []string
+
 var groups arrayFlags
 
 func (i *arrayFlags) String() string {
@@ -30,7 +32,7 @@ func (i *arrayFlags) Set(value string) error {
 }
 
 func main() {
-	validity := flag.Duration("validity", 3600 * time.Second, "Duration in seconds in which the token should be valid")
+	validity := flag.Duration("validity", 3600*time.Second, "Duration in seconds in which the token should be valid")
 	user := flag.String("user", "", "Username")
 	flag.Var(&groups, "group", "Group name (flag can be used multiple times)")
 	flag.Usage = func() {
@@ -45,7 +47,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if len(*user) == 0{
+	if len(*user) == 0 {
 		log.Fatal("Please define a user name")
 	}
 
@@ -53,7 +55,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tokenString, err := generator.GenerateToken(time.Now(),*validity,*user,groups,privateKey)
+	tokenString, err := generator.GenerateToken(time.Now(), *validity, *user, groups, privateKey)
 
 	if err != nil {
 		log.Fatal(err)

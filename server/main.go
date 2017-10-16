@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
-	"fmt"
 	"os"
 )
 
@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if len(*config.Credentials) == 0{
+	if len(*config.Credentials) == 0 {
 		log.Fatal("No credentials to verify were provided")
 	}
 	srv := runServer(config)
@@ -43,8 +43,7 @@ func main() {
 func createEmptyConfig(filename *string) *string {
 	out, err := yaml.Marshal(
 		Settings{
-			Credentials:
-			&[]SettingsCredential{{}},
+			Credentials: &[]SettingsCredential{{}},
 		})
 	if err != nil {
 		panic(err)
