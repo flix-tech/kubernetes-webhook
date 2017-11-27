@@ -19,5 +19,4 @@ deploy:
   file:
     - "./dist/kubernetes-webhook-linux"
   on:
-    repo: flix-tech/kubernetes-webhook
     tags: true

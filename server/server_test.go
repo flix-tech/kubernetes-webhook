@@ -23,7 +23,7 @@ func TestRunServer(t *testing.T) {
 	srv := runServer(&config)
 	println("Server runs")
 	time.Sleep(1 * time.Second)
-	println("Server timeout exceeded")
+	println("Server timeout exceeded (expected)")
 	if err := srv.Shutdown(nil); err != nil {
 		t.Error("Shutting down server failed", err)
 	}
