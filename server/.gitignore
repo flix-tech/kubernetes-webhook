@@ -2,5 +2,4 @@
 *.key.pub
 !test_resources/*.test.key
 !test_resources/*.test.key.pub
-config.yml
 server
