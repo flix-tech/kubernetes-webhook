@@ -1,0 +1,23 @@
+language: go
+go:
+- 1.9.x
+
+before_install:
+- cd server
+- curl https://glide.sh/get | sh
+
+install:
+- glide install
+
+script: make build-ci
+
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: 7g2eK+I3S6yRur/nzi7yDt5K69cCBQ6RNGgbKKS0UQ5I6pK8RqgkussEERFxyXYP3gimoY8b+GA+BkHLEq/Bsn4jzn/J+yuJal43WKJPLaQUwMSGpYTB/n0od+egXOGynu2mB3XQoLIhkOObf8F3KagGpJ+/CiJXEQeSgw3W5D3MqqGFGZqDwhr6UZAWTxE/SxwGaDcBb2G1PlJ4K6GsqUAd5h2d8MBZNcic7Gg0RPPQwwiF93PXguCZiLKWg6o9ofpErGgxLYEvS9SoHfR0dARKhmNpR8nbEBDTY7g65HD7EpMn33nEynJYSnbjig3NtziI4HPXr7a8emh0EsAtnudVwguv5Aa2RR/X47mdt8rbuxcnW4l8G7PDe2im7c2g+VIGFEi6rwtPym34fDMWREbk4YeVmq4JEemsPZmBm/AFibCKymbdZRBQipteBkpQSgeYOb2Xb/bZZLVe/euTLrP0vJsUGgz3j3YuuYOvgdRbcngA/h73/02gVL6/D1BGKplaE67Saq96IzkaZ3GqjJpW+D5+XaXolA1v5NGib2B2r+X+RhRpYGyNFFc9KvPJmErV4DHHSA17vun8Hv9l18gyUV9GhY+MpVkRC6reJt1VV5cUbfAWjRDP9qyQ5NhGCy3hWi9DytkN9Vc635wa0Sd91MC/ERJs6rsFtjtI8n8=
+  file:
+    - "./dist/kubernetes-webhook-linux"
+  on:
+    repo: flix-tech/kubernetes-webhook
+    tags: true
