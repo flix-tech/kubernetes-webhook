@@ -3,7 +3,7 @@ package main
 import (
 	"crypto/rsa"
 	"github.com/dgrijalva/jwt-go"
-	generator "github.com/flix-tech/kubernetes-webhook/jwt-generator/generator"
+	"github.com/flix-tech/kubernetes-webhook/jwt-generator/generator"
 	"io/ioutil"
 	"log"
 	"testing"

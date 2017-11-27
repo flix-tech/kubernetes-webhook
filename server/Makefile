@@ -2,6 +2,7 @@ install:
 	glide install -v
 
 test:
+	pwd
 	go test
 	exit `gofmt -d *.go | wc -l`
 
