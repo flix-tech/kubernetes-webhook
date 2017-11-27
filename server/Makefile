@@ -4,7 +4,7 @@ install:
 test:
 	pwd
 	go test
-	exit `gofmt -d *.go
+	gofmt -d *.go
 	exit `gofmt -d *.go | wc -l`
 
 build-ci: test
