@@ -3,6 +3,7 @@ credentials:      # List of accepted credentials
   userglobs: []   # example: ["gitlab/*"]
   groupglobs: []  # example: ["gitlab/*"]
 listenaddress: "" # default: "0.0.0.0:3000"
-ssl: false        # whether to serve http or https. if true, sslkeypath and sslcrtpath must be provided
+ssl: false        # whether to serve http or https.
+                  # if true, sslkeypath and sslcrtpath must be provided
 sslkeypath: ""
 sslcrtpath: ""

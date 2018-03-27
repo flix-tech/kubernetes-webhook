@@ -2,17 +2,17 @@
 
 ![Build status](https://travis-ci.org/flix-tech/kubernetes-webhook.svg?branch=master)
 
+The Kubernetes webhook authentication via JWT allows you to authenticate to Kubernetes via JWT.
+This allows you to have a trusted component that gives out temporary tokens with limited permissions in the cluster. It is useful for CI pipelines.
+
 This repo is split up into two components:
 
-* jwt-generator
-
-    Generates JWT with a user and her groups. Is only contained in this repo as reference implementation.
 
 * [server](server/readme.md)
 
-    Validates that the JWT is valid and that the client is allowed to authenticate the user and the groups.
+    Authentication plugin for Kubernetes. Validates that the JWT is valid provides Kubernetes with the allowed groups.
+* jwt-generator
 
-Please take a look at the subfolders for more information.
+    Reference implementation of JWT generator with a user and her groups.
 
-# Further docs
-See the [documentation](server/readme.md)
+[Getting started](server/readme.md)
