@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	authentication "k8s.io/kubernetes/pkg/apis/authentication/v1beta1"
+	authentication "k8s.io/kubernetes/pkg/apis/authentication"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +12,7 @@ import (
 func authenticationResponse(w http.ResponseWriter, trs *authentication.TokenReviewStatus) {
 	tr := authentication.TokenReview{
 		TypeMeta: metav1.TypeMeta{
-			APIVersion: "authentication.k8s.io/v1beta1",
+			APIVersion: "authentication.k8s.io/v1",
 			Kind:       "TokenReview"},
 		Status: *trs,
 	}
@@ -60,7 +60,7 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 func assertFileExists(path string) {
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
-		log.Println("File '%v' does not exist.", path)
+		log.Printf("File '%v' does not exist.\n", path)
 		os.Exit(1)
 	}
 }

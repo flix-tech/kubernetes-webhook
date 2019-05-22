@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gobwas/glob"
 	"github.com/prometheus/common/log"
@@ -33,6 +34,7 @@ func filterValidGroups(groups []string, globs []string) []string {
 	}
 	return allowedGroups
 }
+
 func verifyToken(tokenString string, credentials *[]SettingsCredential) (err1 error, user string, groups []string) {
 	var token *jwt.Token = nil
 	var err error = nil
@@ -44,6 +46,10 @@ func verifyToken(tokenString string, credentials *[]SettingsCredential) (err1 er
 			continue
 		}
 		token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			// Don't forget to validate the alg is what you expect:
+			if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
 			return jwt.ParseRSAPublicKeyFromPEM(publicKey)
 		})
 		if err != nil {
