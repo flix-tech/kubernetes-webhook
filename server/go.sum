@@ -13,6 +13,7 @@ github.com/flix-tech/kubernetes-webhook v0.1.1-0.20180327081608-4811b6ee0e22 h1:
 github.com/flix-tech/kubernetes-webhook v0.1.1-0.20180327081608-4811b6ee0e22/go.mod h1:4moYv+CRzVfehtFael/iGQQu8dYS9hlYRi54oEwlIxI=
 github.com/flix-tech/kubernetes-webhook v0.1.1 h1:grFlzWsS3CybKgdrfLhFXc/czVWmX9C1V1qNHWMONis=
 github.com/flix-tech/kubernetes-webhook v0.1.1/go.mod h1:4moYv+CRzVfehtFael/iGQQu8dYS9hlYRi54oEwlIxI=
+github.com/flix-tech/kubernetes-webhook/server v0.0.0-20190522140922-3678e3e2b068/go.mod h1:v2DHfJRjJMCiiRymjCNbPB2Yu8YdeDG59N1YOm83ZSM=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=

@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	authentication "k8s.io/api/authentication/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	authentication "k8s.io/kubernetes/pkg/apis/authentication"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +12,7 @@ import (
 func authenticationResponse(w http.ResponseWriter, trs *authentication.TokenReviewStatus) {
 	tr := authentication.TokenReview{
 		TypeMeta: metav1.TypeMeta{
-			APIVersion: "authentication.k8s.io/v1",
+			APIVersion: "authentication.k8s.io/v1beta1",
 			Kind:       "TokenReview"},
 		Status: *trs,
 	}
@@ -50,10 +50,8 @@ func authenticate(w http.ResponseWriter, r *http.Request, config *Settings) {
 			Groups:   groups,
 		},
 	}
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"apiVersion": "authentication.k8s.io/v1beta1",
-		"kind":       "TokenReview",
-		"status":     trs,
+	json.NewEncoder(w).Encode(authentication.TokenReview{
+		Status: trs,
 	})
 }
 
