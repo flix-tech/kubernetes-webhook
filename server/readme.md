@@ -3,25 +3,19 @@
 This server responds to Kubernetes Authentication challenges and responds with the groups of the user after checking whether the signer is allowed to log the user in.
 
 ## Installation
-### Docker
-Available in the docker registry at: `flixtech/kubernetes-webhook`
-
-To run this container on the APIserver you could run:
-
-    docker run -p 127.0.0.1:3443:3000 --name webhook-auth   \
-    -v /etc/kube-webhook-auth/config.yml:/config.yml:ro   \
-    -v /etc/kube-webhook-auth/trusted-signer.key:/trusted-signer.key:ro   \
-    flixtech/kubernetes-webhook
 
 ### Binary
 Compiled binaries are available as [releases](https://github.com/flix-tech/kubernetes-webhook/releases).
 
 ### From source
 
-This repo expects to be at `$GOPATH/src/flix-tech/kubernetes-webhook`.
-Glide is used for dependency management.
+Go modules are used. This package cannot be in the $GOPATH, but must be in a separate directory.
+Use a recent Go version (e.g. >=1.12)
 
-Run `glide install -v`.
+    # In this directory:
+    make build-ci
+    # or in the root of this repository:
+    docker build -t kubernetes-webhook -f server.Dockerfile .
 
 ## Configuration
 
@@ -60,3 +54,12 @@ Example for the WebHookConfigFile:
     current-context: webhook
 
 For further info see the [K8s documentation](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
+
+## Usage
+
+To run this container on the APIserver you could run:
+
+    docker run -p 127.0.0.1:3443:3000 --name kubernetes-webhook   \
+    -v /etc/kube-webhook-auth/config.yml:/config.yml:ro   \
+    -v /etc/kube-webhook-auth/trusted-signer.key:/trusted-signer.key:ro   \
+    kubernetes-webhook
